@@ -1,7 +1,0 @@
-# app.py
-from flask import Flask
-
-def create_app():
-    app = Flask(__name__)
-    # ... configure your app here ...
-    return app
