@@ -24,4 +24,7 @@ from app.models import User
 def load_user(user_id):
     return User.get_user(user_id)
 
+from app.blueprints.api import api
+app.register_blueprint(api)
+
 from app import routes, models

@@ -13,7 +13,6 @@ class Address_book(db.Model):
     phone = db.Column(db.String(75), nullable=False)
     address = db.Column(db.String(75), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    username = db.Column(db.String(64))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def to_dict(self):
@@ -24,7 +23,6 @@ class Address_book(db.Model):
             'phone': self.phone,
             'address': self.address,
             'date_created': self.date_created,
-            'username': self.username,
             'user_id': self.user_id,
             'user': self.user.to_dict()
         }
@@ -38,6 +36,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     contacts = db.relationship('Address_book', backref='user', lazy=True)
+    #change These
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
 
@@ -76,3 +75,4 @@ class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref=db.backref('all_contacts', lazy=True))
+
