@@ -23,14 +23,16 @@ def contacts():
         last_name = form.last_name.data
         phone = form.phone.data
         address = form.address.data
+        username = current_user.username
 
-        existing_contact = db.session.execute(db.select(Address_book).where( (Address_book.first_name==first_name) | (Address_book.phone==phone))).scalar()
+        existing_contact = db.session.query(Address_book).filter((Address_book.username == username) & ((Address_book.first_name == first_name) | (Address_book.phone == phone))).first()
+
         if existing_contact:
             flash("Contact already exists with the same information", "danger")
             return redirect(url_for('contacts'))
         
         
-        new_contact = Address_book(first_name = first_name, last_name = last_name, phone = phone, address = address)
+        new_contact = Address_book(first_name = first_name, last_name = last_name, phone = phone, address = address, username = username)
 
         db.session.add(new_contact)
         db.session.commit()
@@ -46,7 +48,7 @@ def contacts():
 
 @app.route('/address_book')
 def address_book():
-    address_book = Address_book.query.all()
+    address_book = Address_book.query.filter_by(username=current_user.username).order_by(Address_book.id.desc()).all()
     return render_template('address_book.html', address_book = address_book)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -74,6 +76,8 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
+        flash("You have successfully logged in")
+
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
 
@@ -85,11 +89,12 @@ def signup():
         username = form.username.data
         email = form.email.data
         password = form.password.data
+        
         check_user = db.session.execute(db.select(User).where( (User.username==username) | (User.email==email) )).scalar()
         if check_user:
             flash('A user with that username/password already exists')
             return redirect(url_for('signup'))
-
+        
         new_user = User(username = username, email = email)
         new_user.set_password(password)
 
@@ -97,9 +102,7 @@ def signup():
         db.session.commit()
         flash(f'{new_user.username} has been created')
 
-        login_user(new_user)      
-
-                # redirect back to the home page
+        login_user(new_user)
         return redirect(url_for('index'))
     elif form.is_submitted():
         flash("Your passwords do not match")

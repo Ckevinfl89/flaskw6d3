@@ -1,11 +1,21 @@
+*{
+    font-family: "Sofia", sans-serif cursive;
+  font-size: 18px;
+  text-shadow: 3px 3px 3px #ababab;
+  background-image: url('paper.gif');
+    
+    
+}
+
 .navbar {
-    background-image: linear-gradient(to bottom, #007bff, #0056b3);
+    background-image: linear-gradient(to bottom, #576675, #0056b3);
 }
 
 .navbar-brand {
     display: flex;
     align-items: center;
     font-size: 1.5rem;
+    color:rgb(0, 0, 0);
 }
 
 .logo {
@@ -25,7 +35,7 @@
 }
 
 .navbar-nav .active > .nav-link {
-    color: #ffc107;
+    color: #ff5a07;
     font-weight: bold;
 }
 
